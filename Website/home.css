@@ -1,0 +1,44 @@
+body { background: #FFF; }
+.night { background: #000; }
+
+
+.white{
+    background-image: url("WHITE.svg");
+}
+
+.yellow{
+    background-image: url("YELLOW.svg");
+}
+
+.red{
+    background-image: url("RED.svg");
+}
+
+.blue{
+    background-image: url("BLUE.svg");
+}
+
+.dark{
+    background-image: url("DARK.svg");
+    
+}
+
+.whiteN{
+    background-image: url(DARKNAME.png);
+}
+
+.blueN{
+    background-image: url(BLUENAME.png);
+}
+
+.redN{
+    background-image: url(REDNAME.png);
+}
+
+.yellowN{
+    background-image: url(YELLOWNAME.png);
+}
+
+h1{
+    padding-top: 10px;
+}

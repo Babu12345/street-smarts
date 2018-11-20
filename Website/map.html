@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-Time Map</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.1/superhero/bootstrap.min.css" rel="stylesheet" integrity="sha384-fiZOWGBt79dIbkt852eb24nKPxYOvAgtp4v4IUFozlwV/WkvlilK1oTVfPorZdV4" crossorigin="anonymous">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="index.html">StreetSmarts</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor03">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Home</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="map.html">Real-Time Map<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="documentation.html">Documentation</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="design.html">Design Challenges</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="parts.html">Parts List</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="code.html">Code Description</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="energy.html">Energy Management</a>
+      </li>
+      </ul>
+  </div>
+</nav>
+
+<center><h1 style="padding-top: 10px">Real-Time Status of Lamps</h1> <h6 id="demo" style="padding-bottom: 5px">Currently No Emergencies</h6></center>
+<div id="map" style="height: 80vh; width:90%; margin-left: 5%"></div>
+
+<script>
+    
+var locations = [[42.363420, -71.101959],[42.362868, -71.102443],[42.362346, -71.102966],[42.362467, -71.102460],[42.361412, -71.102811],[42.362198, -71.101973],[42.362437, -71.101722],[42.363558, -71.100574],[42.362664, -71.100665],[42.362156, -71.101213],[42.360870, -71.101871],[42.361872, -71.100769],[42.362399, -71.100194],[42.363006, -71.099624],[42.363418, -71.099465],[42.363349, -71.098378],[42.362628, -71.099013],[42.362088, -71.099685],[42.361560, -71.100262],[42.360987, -71.099268],[42.361355, -71.098466],[42.362015, -71.097960],[42.362621, -71.097874],[42.363286, -71.097542],[42.363581, -71.097493],[42.363605, -71.097830],[42.363220, -71.096729],[42.362547, -71.096803],[42.361887, -71.096890],[42.361808, -71.097632],[42.361403, -71.096998]]
+    
+var lamps = []
+
+window.onload = function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange=function() {
+    if (this.readyState == 4 && this.status == 200) {
+        if (this.responseText != "") {
+      document.getElementById("demo").innerHTML = this.responseText;
+        }
+      lamps = this.responseText.split(' ');
+      initMap();
+    }
+  };
+  xhttp.open("GET", "https://iesc-s1.mit.edu/608dev/sandbox/linnear/emergencyRequest.py?type=bigboi", true);
+  xhttp.send();
+
+google.maps.event.trigger(map, 'resize');
+}
+
+function initMap() {
+  // Styles a map in night mode.
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 42.362260, lng: -71.099685},
+          zoom: 18,
+      gestureHandling: 'none',
+          zoomControl: false,
+    styles: [
+  {
+    "featureType": "administrative.land_parcel",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.man_made",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#999999"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.business",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#c1bcbf"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#b4f2ec"
+      }
+    ]
+  }
+]
+  });
+
+map.setOptions({draggable: false});
+
+    
+    
+var ID;
+for (ID=0;ID<31;ID++){
+    if (lamps.indexOf(String(ID)) != -1){
+        var markerImage = new google.maps.MarkerImage('street-lamp-ON.png',
+                new google.maps.Size(40, 45),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(20, 22.5));
+
+        let google_marker = new google.maps.Marker({
+            icon: markerImage,
+            position: {lat: locations[ID][0], lng: locations[ID][1]},
+            map: map,
+            optimized: false,
+            zIndex:100
+        });
+        
+        if (String(ID) === "13"){
+            var markerImage = new google.maps.MarkerImage('street-lamp-RED.png',
+                new google.maps.Size(40, 45),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(20, 22.5));
+
+            let google_marker = new google.maps.Marker({
+                icon: markerImage,
+                position: {lat: locations[ID][0], lng: locations[ID][1]},
+                map: map,
+                optimized: false,
+                zIndex:100
+            });
+            
+        } 
+        
+        if (String(ID) === "2"){
+            var markerImage = new google.maps.MarkerImage('street-lamp-BLUE.png',
+                new google.maps.Size(40, 45),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(20, 22.5));
+
+            let google_marker = new google.maps.Marker({
+                icon: markerImage,
+                position: {lat: locations[ID][0], lng: locations[ID][1]},
+                map: map,
+                optimized: false,
+                zIndex:100
+            });
+            
+        }  
+    }
+    
+    else{
+        var markerImage = new google.maps.MarkerImage('street-lamp-OFF.png',
+                new google.maps.Size(40, 45),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(20, 22.5));
+
+        let google_marker = new google.maps.Marker({
+            icon: markerImage,
+            position: {lat: locations[ID][0], lng: locations[ID][1]},
+            map: map,
+            optimized: false,
+            zIndex:100
+        });
+    }
+    
+}
+}
+    
+setInterval(function() {
+  initMap();
+}, 20000);
+    
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDytLTaGs8IFm7iAOteYzHCKZ1KF_kjbeA&callback=initMap"
+    async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDytLTaGs8IFm7iAOteYzHCKZ1KF_kjbeA&libraries=geometry"></script>
+
+</body>
+</html>
